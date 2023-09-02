@@ -1,0 +1,19 @@
+
+<ol class="list-group list-group">
+    <li *ngFor="let budgetSummary of budgetStatics" class="list-group-item d-flex justify-content-between align-items-start">
+      <div class="ms-2 me-auto">
+        <div class="fw-bold">{{budgetSummary.budgetDescription}}&nbsp;<span class="badge bg-info">{{budgetSummary.status}}</span></div>
+        <div>
+            Montant budget &nbsp;<span class="badge text-bg-secondary">{{budgetSummary.budgetAmount}}</span>
+        </div>
+        <div>
+            Montant Depense &nbsp;
+            <span class="badge bg-warning">
+                {{budgetSummary.totalExpenses}}
+            </span>
+        </div>
+      </div>
+      <span class="badge bg-success rounded-pill">{{budgetSummary.budgetAmount - budgetSummary.totalExpenses}}</span>
+    </li>
+  
+  </ol>

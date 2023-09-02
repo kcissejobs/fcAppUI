@@ -1,0 +1,181 @@
+<div class="container mt-2">
+    <div class="container align-content-center col-6 ">
+        <form [formGroup]="addExpenseForm" (ngSubmit)="onCreate()">
+            <!--Type de depense-->
+            <div class="form-group small row my-1">
+                <label for="expenseTypeId" class="col-sm-2 col-form-label ">Type</label>
+                <div class="col-sm-10">
+                    <select formControlName="expenseTypeId" id="expenseTypeId" class="form-control form-control-md fw-lighter">
+                        <option *ngFor="let expenseType of expenseTypes" value={{expenseType.id}}>{{expenseType.description}}</option>
+                    </select>
+                </div>
+            </div>
+
+              <!--Budget-->
+           <div class="form-group small row my-1">
+                <label for="budgetId" class="col-sm-2 col-form-label ">Budget</label>
+                <div class="col-sm-10">
+                    <select formControlName="budgetId" id="budgetId" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                        <option *ngFor="let budget of budgets" value={{budget.id}}>{{budget.description}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div  class="form-group small row">
+                <label for="amount" class="col-sm-2 col-form-label">Montant</label>
+                <div class="col-sm-10" >
+                  <input formControlName="amount" type="number" class="form-control" id="amount">
+                </div>
+            </div>
+          
+            <div class="form-group small row my-1">
+                <label for="status" class="col-sm-2 col-form-label ">Status</label>
+                <div class="col-sm-10">
+                    <select formControlName="status" id="status" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                        <option selected value="FREEZE">Comptabiliser</option>
+                        <option  value="PENDING">En Attente</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group small row my-1">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10 ">
+                    <button type="submit" class="btn btn-sm btn-outline-success mx-1">Enregistrer</button>
+                    <button (click)="onSearch()" class="btn btn-sm  btn-outline-info" >Rechercher</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <diV class="container border-top my-3"  *ngIf="currentPage.content.length;">
+        <table class="table">
+            <thead>
+                <tr class="small">
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+              
+            </thead>
+            <tbody>
+                <tr *ngFor="let expense of currentPage.content">
+                    <td>{{expense.id}}</td>
+                    <td>{{expense.description}}</td>
+                    <td>
+                        <span class="badge text-bg-secondary">{{expense.amount}}</span>
+                    </td>
+                    <td>{{expense.dateCreation | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+                        <span class="badge text-bg-warning">{{expense.status}}</span>
+                    </td>
+                    <td>
+                        <button (click)="showExpense(expense)" data-bs-toggle="modal" data-bs-target="#updateExpense" class="btn btn-sm btn-outline-info mx-1">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button (click)="showExpense(expense)" data-bs-toggle="modal" data-bs-target="#deleteExpense"  class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <div class="container my-1">
+                    <button  *ngFor="let page of expensePages" class="btn btn-link"  (click)="showPage(page.numero) ">
+                        {{page.numero + 1}}
+                    </button>
+                </div>
+            </tfoot>
+        </table>
+    </diV>
+    
+</div>
+
+  <!-- Modal Modifier Budget-->
+  <div class="modal fade" id="updateExpense" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateExpense" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modifier la dépense</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="updateExpenseFormGroup" (ngSubmit)="onUpdateExpense()">
+         
+           <!--Type de depense-->
+           <div class="form-group small row my-1">
+                <label for="expenseTypeId" class="col-sm-2 col-form-label ">Type</label>
+                <div class="col-sm-10">
+                    <select formControlName="expenseTypeId" id="expenseTypeId" class="form-control form-control-md fw-lighter">
+                        <option *ngFor="let expenseType of expenseTypes" value={{expenseType.id}}>{{expenseType.description}}</option>
+                    </select>
+                </div>
+            </div>
+
+             <!--Budget-->
+           <div class="form-group small row my-1">
+                <label for="budgetId" class="col-sm-2 col-form-label ">Budget</label>
+                <div class="col-sm-10">
+                    <select formControlName="budgetId" id="budgetId" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                        <option *ngFor="let budget of budgets" value={{budget.id}}>{{budget.description}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--Montant-->
+            <div *ngIf="hiddenAmount" class="form-group small row">
+                <label for="amount" class="col-sm-2 col-form-label">Montant</label>
+                <div class="col-sm-10" >
+                  <input formControlName="amount" type="number" class="form-control" id="amount">
+                </div>
+            </div>
+
+            <!--Status-->
+            <div class="form-group small row my-3">
+                <label for="status" class="col-sm-2 col-form-label ">Status</label>
+                <div class="col-sm-10">
+                    <select formControlName="status" id="status" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                        <option selected value="FREEZE">Comptabiliser</option>
+                        <option selected value="CANCEL">Annuler</option>
+                    </select>
+                </div>
+            </div>
+
+           
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Modifier</button>
+            </div>
+  
+          </form>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal Suprimer Budget-->
+    <div class="modal fade" id="deleteExpense" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteExpense" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Suprimer la dépense</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                 Voulez vous suprimer la depense ?
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NON</button>
+                    <button (click)="onDelete()" type="button" class="btn btn-danger" data-bs-dismiss="modal">OUI</button>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>

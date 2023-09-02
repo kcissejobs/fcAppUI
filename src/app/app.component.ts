@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'expenseApp';
+  budgets = [{"id": 1, "amount" : 500, "period" : "X"}, {"id": 1, "amount" : 800, "period" : "Y"}]
 }

@@ -1,0 +1,196 @@
+<div class="container">
+    <div class="container m-2">
+        <button type="submit" class="btn btn-outline-info fw-semibold" data-bs-toggle="modal" data-bs-target="#addBudget" >Ajouter Budget</button>
+    </div>
+    <ng-template #errors>
+        <div class="text-danger">
+            {{errorMessage}}
+        </div>
+    </ng-template>
+    <div class="card" *ngIf="budgets.length; else errors">
+        <div class="card-header">Liste des budgets</div>
+       <div class="card-body" >
+        
+        <form [formGroup]="searchForm" (ngSubmit)="searchBudgets()">
+            <div class="input-group">
+                <label class="input-group-text">Keyword: </label>
+                <input type="text" class="form-control" formControlName="keyword"/>
+                
+                <button class="btn btn-info">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+      
+        <table   class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Période</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+              
+            </thead>
+            <tbody>
+                <tr *ngFor="let b of budgets">
+                    <td>{{b.id}}</td>
+                    <td>{{b.description}}</td>
+                    <td>
+                        <span class="badge bg-success">{{b.amount}}</span>
+                    </td>
+                    <td>{{b.period.startDate | date: 'dd/MM/yyyy'}} - {{b.period.endDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+                        <span class="badge bg-info">{{b.status}}</span>
+                    </td>
+                    <td>
+                        <button data-bs-toggle="modal" data-bs-target="#updateBudget" class="btn btn-sm btn-outline-info mx-1" (click)="showBudget(b)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    
+                        <button class="btn btn-sm btn-outline-danger" (click)="onDeleteBudget(b)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Ajouter Budget-->
+<div class="modal fade" id="addBudget" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addBudget" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Ajouter Budget</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="addBudgetFormGroup" (ngSubmit)="onAddBudget()">
+        
+            <!-- Montant -->
+            <div class="form-outline">
+              <label class="form-label" for="amount">Montant</label>
+              <input type="text" 
+                id="amount"
+                class="form-control form-control-md fw-lighter"
+                formControlName="amount" />
+            </div>
+
+            <!-- Status -->
+
+            <div class="form-outline mb-3">
+                <label class="form-label" for="status">Status</label>
+                <select formControlName="status" id="status" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                    <option value="PENDING">En Attente</option>
+                    <option value="FREEZE">Comptabiliser</option>
+                </select>
+            </div>
+        
+            <!-- Periode -->
+            <div formGroupName="period" class="form-outline">
+                <label class="form-label" for="period">Periode</label>
+                <select formControlName="id" id="period" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                    <option *ngFor="let period of periods," value={{period.id}}>Du {{period.startDate | date: 'dd/MM/yyyy'}} au {{period.endDate | date: 'dd/MM/yyyy'}}</option>
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="form-outline">
+                <label class="form-label" for="description">Description</label>
+                <textarea type="text" 
+                id="description"
+                class="form-control form-control-md fw-lighter"
+                formControlName="description" ></textarea>
+            </div>
+
+           
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Ajouter</button>
+            </div>
+  
+          </form>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Modifier Budget-->
+<div class="modal fade" id="updateBudget" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateBudget" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modifier Budget</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="updateBudgetFormGroup" (ngSubmit)="onUpdateBudget()">
+            <!-- Montant -->
+            <div class="form-outline">
+                <input type="text" hidden
+                  id="amount"
+                  class="form-control form-control-md fw-lighter"
+                  formControlName="id" />
+            </div>
+        
+            <!-- Montant -->
+            <div class="form-outline">
+              <label class="form-label" for="amount">Montant</label>
+              <input type="text" 
+                id="amount"
+                class="form-control form-control-md fw-lighter"
+                formControlName="amount" />
+            </div>
+
+            <!-- Status -->
+
+            <div class="form-outline mb-3">
+                <label class="form-label" for="status">Status</label>
+                <select formControlName="status" id="status" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                    <option value="PENDING">En Attente</option>
+                    <option value="FREEZE">Comptabiliser</option>
+                    <option value="CANCEL">Annuler</option>
+                </select>
+            </div>
+        
+            <!-- Periode -->
+            <div formGroupName="period" class="form-outline">
+                <label class="form-label" for="period">Periode</label>
+                <select formControlName="id" id="period" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                    <option *ngFor="let period of periods," value={{period.id}}>Du {{period.startDate | date: 'dd/MM/yyyy'}} au {{period.endDate | date: 'dd/MM/yyyy'}}</option>
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="form-outline">
+                <label class="form-label" for="description">Description</label>
+                <textarea type="text" 
+                id="description"
+                class="form-control form-control-md fw-lighter"
+                formControlName="description" ></textarea>
+            </div>
+
+           
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Modifier</button>
+            </div>
+  
+          </form>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>

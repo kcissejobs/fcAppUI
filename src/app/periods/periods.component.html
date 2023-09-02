@@ -1,0 +1,148 @@
+
+<div class="container mt-3">
+    <button type="submit" class="btn btn-outline-info fw-semibold" data-bs-toggle="modal" data-bs-target="#addPeriod">Ajouter Période</button>
+
+</div>
+
+<div class="container mt-3">
+    <div class="row" >
+     
+        <div class="col-3 " *ngFor="let period of periods;">
+          <div class="card mt-2">
+            <div class="container">
+              <a class="badge bg-success text-decoration-none">{{period.status}}</a>
+              <span (click)="showPeriod(period.id)" class="btn bi bi-trash3 float-end" data-bs-toggle="modal" data-bs-target="#deletePeriod" style="color:#C65547"></span>
+              <span (click)="showPeriod(period.id)" class="btn bi bi-pencil float-end" data-bs-toggle="modal" data-bs-target="#updatePeriod" style="color:#C65547"></span>
+             </div>
+
+            <div class="card-body">
+              <p class="card-text fw-light">Du {{period.startDate | date: 'dd/MM/yyyy'}} au {{period.endDate | date: 'dd/MM/yyyy'}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+<!-- Modal Ajouter Periode-->
+<div class="modal fade" id="addPeriod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addPeriod" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Ajouter Période</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="addPeriodFormGroup" (ngSubmit)="onAddPeriod()">
+        
+            <!-- Start Date -->
+            <div class="form-outline mb-3">
+              <label class="form-label" for="form3Example3">Date Début</label>
+              <input type="date" 
+                id="form3Example3"
+                class="form-control form-control-md fw-lighter"
+                formControlName="startDate" />
+            </div>
+  
+            <!-- End Date -->
+            <div class="form-outline mb-3">
+              <label class="form-label" for="form3Example4">Date Fin</label>
+              <input type="date" 
+                id="form3Example4" 
+                class="form-control form-control-md fw-lighter"
+                formControlName="endDate"/>
+            </div>
+
+            <div class="form-outline mb-3">
+              <label class="form-label" for="status">Status</label>
+              <select formControlName="status" id="status" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+                <option selected value="PENDING">En Attente</option>
+                <option value="OPEN">Ouvert</option>
+                <option value="CLOSE">Ferme</option>
+              </select>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Ajouter</button>
+            </div>
+  
+          </form>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Modifier Periode-->
+<div class="modal fade" id="updatePeriod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updatePeriod" aria-hidden="true">
+ 
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modifier Période</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{updatePeriodFormGroup.value.startDate}}
+        <form [formGroup]="updatePeriodFormGroup" (ngSubmit)="onUpdatePeriod()">
+        
+          <!-- Start Date -->
+          <div class="form-outline mb-3">
+            <label class="form-label" for="form3Example3">Date Début</label>
+
+            <input type="date" 
+              id="form3Example3" 
+              class="form-control form-control-md fw-lighter"
+              formControlName="startDate" />
+          </div>
+
+          <!-- End Date -->
+          <div class="form-outline mb-3">
+            <label class="form-label" for="form3Example4">Date Fin</label>
+            <input type="date"
+              id="form3Example4" 
+              class="form-control form-control-md fw-lighter"
+              formControlName="endDate"/>
+          </div>
+
+          <div class="form-outline mb-3">
+            <label class="form-label" for="status">Status</label>
+            <select formControlName="status" id="status" class="form-control form-control-md fw-lighter" aria-label="Default select example">
+              <option value="PENDING">En Attente</option>
+              <option value="OPEN">Ouvert</option>
+              <option value="CLOSE">Ferme</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Modifier</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <!-- Modal Suprimer Periode-->
+  <div class="modal fade" id="deletePeriod" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deletePeriod" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Supression période</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <span class="bi bi-exclamation-triangle text-danger"></span>
+          Voulez vous suprimer la période ? 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NON</button>
+          <button (click)="onDeletePeriod()" type="button" data-bs-dismiss="modal" class="btn btn-primary">OUI</button>
+        </div>
+      </div>
+    </div>
+  </div>

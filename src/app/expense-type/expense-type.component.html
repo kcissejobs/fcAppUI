@@ -1,0 +1,76 @@
+<div class="container mt-2">
+    <div class="container m-2">
+        <form [formGroup]="addExpenseTypeForm" (ngSubmit)="addExpenseType()">
+            <div class="input-group">
+                <input type="text" class="form-control" formControlName="description"/>
+                <button class="btn btn-info" type="submit">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    
+    <ul class="list-group">
+        <li *ngFor="let expenseType of expenseTypes;"  class="list-group-item">
+
+          <div>
+            {{expenseType.description}}
+            <span data-bs-toggle="modal" (click)="showExpenseType(expenseType)" data-bs-target="#deleteTypeExpense" class="btn btn-sm  btn-outline-danger mx-1 float-end" >Suprimer</span>
+            <span data-bs-toggle="modal" (click)="showExpenseType(expenseType)" data-bs-target="#updateTypeExpense" class="btn btn-sm  btn-outline-info  float-end " >Modifier</span>
+          </div>
+      
+        </li>
+    </ul>
+</div>
+
+  <!-- Modal Modifier Periode-->
+  <div class="modal fade" id="updateTypeExpense" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateTypeExpense" aria-hidden="true">
+ 
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modifier Type Depense</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+       
+          <form [formGroup]="updateExpenseTypeForm" (ngSubmit)="updateExpenseType()">
+          
+            <input type="text" class="form-control" formControlName="description"/>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Modifier</button>
+            </div>
+  
+          </form>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal Modifier Periode-->
+  <div class="modal fade" id="deleteTypeExpense" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteTypeExpense" aria-hidden="true">
+ 
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modifier Type Depense</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Voulez vous suprimer le type de depense ?</p>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NON</button>
+              <button type="submit" (click)="deleteExpenseType()" class="btn btn-primary" data-bs-dismiss="modal">OUI</button>
+            </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
